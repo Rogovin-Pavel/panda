@@ -18,7 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "docker:run": "docker run -p 3000:3000 b4ff16ce8c944fc665b5ab6d1c746a63b4a261127da099b03f1fde6d046e2910"
+    "docker:build": "docker build -t $npm_package_name:$npm_package_version .",
+    "docker:run": "docker run -it -p 8080:3000 -d --name $npm_package_name $npm_package_name:$npm_package_version",
+    "docker:stop": "docker stop $npm_package_name",
+    "docker:restart": "docker start $npm_package_name",
+    "docker:delete": "docker rm $npm_package_name"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
