@@ -1,14 +1,28 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
+import { CatsModule } from './cats/cats.module';
+import { LoggerMiddleware } from './logger/logger.middleware';
+import { AuthModule } from './auth/auth.module';
 import { CatsController } from './cats/cats.controller';
 import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
-import { CatsService } from './cats/cats.service';
 
 @Module({
-  imports: [],
-  controllers: [AppController, CatsController, AuthController],
-  providers: [AppService, AuthService, CatsService],
+  imports: [CatsModule, AuthModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .exclude({ path: 'cats', method: RequestMethod.POST })
+      .forRoutes(CatsController, AuthController);
+  }
+}
