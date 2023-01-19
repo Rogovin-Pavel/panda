@@ -1,10 +1,23 @@
-import { Body, Controller, Get, Header, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Post,
+  UnauthorizedException,
+  UseFilters,
+} from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { Cat } from './interfaces/cat.interface';
 import { CatsInterface } from './interfaces/cats.interface';
 import { CatsService } from './cats.service';
+import { HttpExceptionFilter } from 'src/http-exception/http-exception.filter';
 
 @Controller('cats')
+@UseFilters(new HttpExceptionFilter())
 export class CatsController implements CatsInterface {
   constructor(private readonly catsService: CatsService) {}
 
@@ -15,8 +28,12 @@ export class CatsController implements CatsInterface {
     return this.catsService.create(createCatDto);
   }
 
-  @Get()
+  @Get('/list')
   async findAll(): Promise<Cat[]> {
-    return this.catsService.findAll();
+    try {
+      return await this.catsService.findAll();
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
   }
 }
