@@ -34,7 +34,7 @@ export class UserResolver {
   }
 
   @Query(() => [UserEntity])
-  async getIsers(): Promise<UserEntity[]> {
+  async getAllUsers(): Promise<UserEntity[]> {
     return await this.userService.getAllUsers();
   }
 }
