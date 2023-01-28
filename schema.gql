@@ -19,7 +19,7 @@ type Mutation {
 }
 
 type Query {
-  getIsers: [UserEntity!]!
+  getAllUsers: [UserEntity!]!
   getUser(id: Float!): UserEntity!
 }
 

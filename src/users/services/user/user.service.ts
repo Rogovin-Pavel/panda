@@ -20,8 +20,8 @@ export class UserService {
 
   async getUser(id: number): Promise<UserEntity> {
     return await this.userRepository.findOne({
-      id,
-    } as FindOneOptions<UserEntity>);
+      where: { id: id },
+    });
   }
 
   async getAllUsers(): Promise<UserEntity[]> {
